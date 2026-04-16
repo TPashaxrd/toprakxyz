@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="tr" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toprak Doğan | toprak.xyzz</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: { darkBg: '#050505', cardBg: '#0f0f0f' }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        ::selection { background: #3b82f6; color: white; }
+        .reveal { opacity: 0; transform: translateY(50px); }
+        ::-webkit-scrollbar {
+            display: none;
+        }
+
+        @keyframes scroll-line-anim {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100%); }
+        }
+        .scroll-anim { overflow: hidden; height: 60px; width: 1px; background: rgba(150,150,150,0.2); position: relative; }
+        .scroll-anim::after {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 50%;
+            background: #3b82f6; animation: scroll-line-anim 2s infinite ease-in-out;
+        }
+
+        .img-container { position: relative; overflow: hidden; border-radius: 1.5rem; }
+        .img-container img { transition: all 1s cubic-bezier(0.19, 1, 0.22, 1); filter: grayscale(100%) contrast(1.1); }
+        .img-container:hover img { filter: grayscale(0%) contrast(1); transform: scale(1.05); }
+    </style>
+</head>
+<body class="bg-white dark:bg-darkBg text-zinc-900 dark:text-zinc-100 transition-colors duration-700">
+
+    <div class="fixed top-8 right-8 z-[100] flex gap-6 items-center mix-blend-difference">
+        <button onclick="toggleLang()" id="lang-btn" class="text-[10px] font-bold tracking-widest text-white border-b border-white pb-1">EN</button>
+        <button onclick="toggleTheme()" class="text-white">
+            <i data-lucide="sun" id="theme-icon" class="w-5 h-5"></i>
+        </button>
+    </div>
+
+    <main class="max-w-6xl mx-auto px-8">
+        
+        <section class="min-h-screen flex flex-col md:flex-row items-center justify-between gap-12 py-20">
+            <div class="reveal flex-1 space-y-8 order-2 md:order-1">
+                <div id="h-loc" class="text-[10px] font-bold tracking-[0.4em] uppercase text-blue-500">Istanbul / Global</div>
+                <h1 id="h-name" class="text-6xl md:text-8xl font-extrabold tracking-tighter leading-[0.9]">
+                    Toprak <br> DOGAN<span class="text-blue-600">.</span>
+                </h1>
+                <p id="h-desc" class="text-xl text-zinc-500 max-w-md leading-relaxed">
+                    Hobileri olan bir öğrenci.
+                </p>
+                <div class="flex gap-6 pt-4">
+                    <a href="#" class="hover:text-blue-500 transition"><i data-lucide="github"></i></a>
+                    <a href="#" class="hover:text-blue-500 transition"><i data-lucide="linkedin"></i></a>
+                    <a href="#" class="hover:text-blue-500 transition"><i data-lucide="instagram"></i></a>
+                </div>
+            </div>
+
+            <div class="reveal flex-1 order-1 md:order-2">
+                <div class="img-container aspect-[3/4] shadow-2xl">
+                    <img src="https://pbs.twimg.com/profile_images/2041949997751513088/CIDeI5LW_400x400.jpg" 
+                         alt="Main Portrait" class="w-full h-full object-cover">
+                </div>
+            </div>
+
+            <div class="absolute bottom-10 left-8 hidden md:flex flex-col items-center gap-4">
+                <span class="text-[10px] tracking-[0.3em] uppercase text-zinc-500 rotate-180 [writing-mode:vertical-lr]">Scroll</span>
+                <div class="scroll-anim"></div>
+            </div>
+        </section>
+
+        <section class="py-32 grid md:grid-cols-3 gap-6">
+            <div class="reveal md:col-span-2 img-container h-[400px]">
+                <img src="https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&q=80&w=1500" 
+                     alt="Work Life" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-black/40 p-10 flex flex-end items-end opacity-0 hover:opacity-100 transition-opacity">
+                    <p class="text-white italic">"Execution is everything."</p>
+                </div>
+            </div>
+            
+            <div class="reveal bg-zinc-100 dark:bg-cardBg p-10 rounded-[1.5rem] flex flex-col justify-between border border-zinc-200 dark:border-zinc-800">
+                <i data-lucide="quote" class="text-blue-500 w-10 h-10"></i>
+                <div>
+                    <h3 id="b-title" class="text-2xl font-bold mb-4">Vizyon</h3>
+                    <p id="b-desc" class="text-zinc-500 text-sm leading-relaxed italic">
+                        Geleceği tahmin etmiyorum, onu en modern teknoloji yığınlarıyla (stack) bizzat inşa ediyorum.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-32 border-t border-zinc-200 dark:border-zinc-800">
+            <div class="flex flex-col md:flex-row gap-20">
+                <div class="reveal flex-1">
+                    <h2 id="t-career" class="text-[10px] font-bold tracking-[0.4em] uppercase text-zinc-400 mb-12">Kariyer Yolu</h2>
+                    <div class="space-y-12">
+                        <div class="group">
+                            <span class="text-blue-500 text-xs font-bold uppercase">2026 - Now</span>
+                            <h3 class="text-2xl font-bold group-hover:translate-x-2 transition">CEO @ STORDECO</h3>
+                            <p class="text-zinc-500 text-sm">Perde ticareti.</p>
+                        </div>
+                        <div class="group">
+                            <span class="text-zinc-500 text-xs font-bold uppercase">2024 - 2025</span>
+                            <h3 class="text-2xl font-bold group-hover:translate-x-2 transition">CEO @ RagberdGames.</h3>
+                            <p class="text-zinc-500 text-sm">Web development ve oyun level design rolü.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="reveal flex-1 bg-zinc-50 dark:bg-cardBg p-12 rounded-[2rem] border border-zinc-100 dark:border-zinc-800">
+                    <h2 id="t-skills" class="text-[10px] font-bold tracking-[0.4em] uppercase text-zinc-400 mb-8">Uzmanlık Alanları</h2>
+                    <ul class="space-y-6 text-lg font-semibold">
+                        <li class="flex justify-between border-b border-zinc-200 dark:border-zinc-800 pb-2"><span>Systems Architecture</span> <span class="text-blue-500">99%</span></li>
+                        <li class="flex justify-between border-b border-zinc-200 dark:border-zinc-800 pb-2"><span>Venture Capital</span> <span class="text-blue-500">85%</span></li>
+                        <li class="flex justify-between border-b border-zinc-200 dark:border-zinc-800 pb-2"><span>Full-Stack Web</span> <span class="text-blue-500">95%</span></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section class="reveal py-40 text-center">
+            <p id="f-pre" class="text-zinc-400 text-xs font-bold tracking-[0.4em] uppercase mb-8">Yeni bir iş birliği için</p>
+            <a href="contact@toprak.xyz" class="text-4xl md:text-8xl font-extrabold tracking-tighter hover:text-blue-500 transition-all duration-500">
+                LET'S CONNECT.
+            </a>
+            <div class="mt-32 flex justify-between text-[10px] font-bold tracking-widest text-zinc-500 uppercase">
+                <span>© 2025 PRVT RIGHTS</span>
+                <span>LIVING IN ISTANBUL</span>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        lucide.createIcons();
+        gsap.registerPlugin(ScrollTrigger);
+
+        document.querySelectorAll('.reveal').forEach(el => {
+            gsap.to(el, {
+                scrollTrigger: { trigger: el, start: "top 90%" },
+                opacity: 1, y: 0, duration: 1.5, ease: "power4.out"
+            });
+        });
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            html.classList.toggle('dark');
+            const icon = document.getElementById('theme-icon');
+            icon.setAttribute('data-lucide', html.classList.contains('dark') ? 'sun' : 'moon');
+            lucide.createIcons();
+        }
+
+        const data = {
+            tr: {
+                loc: "İSTANBUL / GLOBAL",
+                desc: "Yazılım hobi olmak üzere girişimler planlıyor ve bir şeyler deniyorum.",
+                vision: "Vizyon",
+                v_desc: "At least I tried something unlike them.",
+                career: "Kariyer Yolu",
+                skills: "Uzmanlık Alanları",
+                pre: "Yeni bir iş birliği için"
+            },
+            en: {
+                loc: "ISTANBUL / GLOBAL",
+                desc: "Software architect and serial entrepreneur. Turning complex technologies into profitable business models.",
+                vision: "Vision",
+                v_desc: "At least I tried something unlike them.",
+                career: "Career Path",
+                skills: "Core Expertise",
+                pre: "For new collaborations"
+            }
+        };
+
+        let lang = 'tr';
+        function toggleLang() {
+            lang = lang === 'tr' ? 'en' : 'tr';
+            const d = data[lang];
+            document.getElementById('lang-btn').innerText = lang === 'tr' ? 'EN' : 'TR';
+            document.getElementById('h-loc').innerText = d.loc;
+            document.getElementById('h-desc').innerText = d.desc;
+            document.getElementById('b-title').innerText = d.vision;
+            document.getElementById('b-desc').innerText = d.v_desc;
+            document.getElementById('t-career').innerText = d.career;
+            document.getElementById('t-skills').innerText = d.skills;
+            document.getElementById('f-pre').innerText = d.pre;
+        }
+    </script>
+</body>
+</html>
