@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="tr" class="dark">
-<head name="google-site-verification" content="FY1wtPxWqws0BK2ttGoRTCQmOJMtdFjCuOlCKT3-vko">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
     <title>Toprak Doğan | toprak.xyz</title>
 
     <meta name="description" content="Toprak Doğan - yazılım, girişimcilik ve projeler üzerine kişisel web sitesi.">
@@ -28,214 +29,336 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.34/dist/lenis.min.js"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
 
     <script>
         tailwind.config = {
             darkMode: 'class',
             theme: {
                 extend: {
-                    fontFamily: { sans: ['Inter', 'sans-serif'] },
-                    colors: { darkBg: '#050505', cardBg: '#0f0f0f' }
+                    fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
+                    colors: { darkBg: '#050505', accent: '#3b82f6', card: '#0d0d0d' }
                 }
             }
         }
     </script>
 
     <style>
-        ::selection { background: #3b82f6; color: white; }
-        .reveal { opacity: 0; transform: translateY(50px); }
-        ::-webkit-scrollbar {
-            display: none;
+        /* Smooth Scroll & Snap Setup */
+        html { 
+            scroll-snap-type: y mandatory; 
+            scroll-behavior: auto !important;
+        }
+        
+        body { 
+            background-color: #050505; 
+            color: #fff; 
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
         }
 
-        @keyframes scroll-line-anim {
-            0% { transform: translateY(-100%); }
-            100% { transform: translateY(100%); }
-        }
-        .scroll-anim { overflow: hidden; height: 60px; width: 1px; background: rgba(150,150,150,0.2); position: relative; }
-        .scroll-anim::after {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 50%;
-            background: #3b82f6; animation: scroll-line-anim 2s infinite ease-in-out;
+        section {
+            height: 100vh;
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
         }
 
-        .img-container { position: relative; overflow: hidden; border-radius: 1.5rem; }
-        .img-container img { transition: all 1s cubic-bezier(0.19, 1, 0.22, 1); filter: grayscale(100%) contrast(1.1); }
-        .img-container:hover img { filter: grayscale(0%) contrast(1); transform: scale(1.05); }
+        .bento-card {
+            background: rgba(15, 15, 15, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 2.5rem;
+            will-change: transform, opacity;
+            transform-style: preserve-3d;
+            opacity: 0;
+        }
+
+        .bento-card:hover {
+            border-color: rgba(59, 130, 246, 0.4);
+            background: rgba(20, 20, 20, 0.6);
+        }
+
+        .gradient-text {
+            background: linear-gradient(to bottom right, #fff 30%, #3b82f6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .gallery-item {
+            position: relative; overflow: hidden; border-radius: 2rem;
+            aspect-ratio: 1 / 1.1;
+        }
+
+        .gallery-item img {
+            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            filter: grayscale(100%);
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.1);
+            filter: grayscale(0%);
+        }
+
+        ::-webkit-scrollbar { display: none; }
     </style>
 </head>
-<body class="bg-white dark:bg-darkBg text-zinc-900 dark:text-zinc-100 transition-colors duration-700">
+<body class="antialiased">
 
-    <div class="fixed top-8 right-8 z-[100] flex gap-6 items-center mix-blend-difference">
-        <button onclick="toggleLang()" id="lang-btn" class="text-[10px] font-bold tracking-widest text-white border-b border-white pb-1">EN</button>
-        <button onclick="toggleTheme()" class="text-white">
-            <i data-lucide="sun" id="theme-icon" class="w-5 h-5"></i>
-        </button>
+    <div id="preloader" class="fixed inset-0 bg-black z-[10000] flex flex-col items-center justify-center">
+        <div class="text-6xl mb-8">🚀</div>
+        <div class="w-64 h-[1px] bg-white/10 rounded-full overflow-hidden">
+            <div id="loader-bar" class="h-full bg-accent w-0 shadow-[0_0_15px_#3b82f6]"></div>
+        </div>
+        <div class="mt-4 font-mono text-[10px] tracking-[0.5em] text-zinc-500 uppercase">System Initializing...</div>
     </div>
 
-    <main class="max-w-6xl mx-auto px-8">
+    <nav class="fixed top-0 w-full z-50 px-8 py-6 backdrop-blur-md border-b border-white/5">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 bg-accent rounded-lg flex items-center justify-center font-bold">T</div>
+                <span class="font-bold tracking-tighter uppercase text-sm">Toprak Doğan</span>
+            </div>
+            <div class="flex gap-8 items-center text-[10px] font-bold tracking-[0.2em] uppercase">
+                <a href="#projects" class="hover:text-accent transition">Portfolio</a>
+                <a href="https://instagram.com/toprakdoganims" target="_blank" class="text-accent">@toprakdoganims</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-6">
         
-        <section class="min-h-screen flex flex-col md:flex-row items-center justify-between gap-12 py-20">
-            <div class="reveal flex-1 space-y-8 order-2 md:order-1">
-                <div id="h-loc" class="text-[10px] font-bold tracking-[0.4em] uppercase text-blue-500">Istanbul / Global</div>
-                <h1 id="h-name" class="text-6xl md:text-8xl font-extrabold tracking-tighter leading-[0.9]">
-                    Toprak <br> DOGAN<span class="text-blue-600">.</span>
-                </h1>
-                <p id="h-desc" class="text-xl text-zinc-500 max-w-md leading-relaxed">
-                    Lise öğrencisi. Finans ve ekonomi alanına yönelmiş, Avrupa’da üniversite hedefi için İngilizce ve sınav hazırlıklarını düzenli olarak sürdüren biri. Aynı zamanda sporla ilgilenip fiziksel gelişimini de ciddiye alıyor. Hedef odaklı, planlı ilerlemeye çalışan bir profil..
-                </p>
-                <div class="flex gap-6 pt-4">
-                    <a href="https://github.com/TPashaxrd" target="_blank" class="hover:text-blue-500 transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77 5.44 5.44 0 0 0 3.5 11.52c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 21.13V24"/>
-                        </svg>
-                    </a>
-
-                    <a href="https://www.linkedin.com/in/toprak-dogan/" target="_blank" class="hover:text-blue-500 transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
-                            <rect x="2" y="9" width="4" height="12"/>
-                            <circle cx="4" cy="4" r="2"/>
-                        </svg>
-                    </a>
-
-                    <a href="https://www.instagram.com/toprakdoganim/" target="_blank" class="hover:text-blue-500 transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
-                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
-                            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
-                        </svg>
-                    </a>
-                </div>
-            </div>
-
-            <div class="reveal flex-1 order-1 md:order-2">
-                <div class="img-container aspect-[4/4] shadow-2xl">
-                    <img src="https://toprak.xyz/ben.jpg" 
-                         alt="Main Portrait" class="w-full h-full object-cover">
-                </div>
-            </div>
-
-            <div class="absolute bottom-10 left-8 hidden md:flex flex-col items-center gap-4">
-                <span class="text-[10px] tracking-[0.3em] uppercase text-zinc-500 rotate-180 [writing-mode:vertical-lr]">Scroll</span>
-                <div class="scroll-anim"></div>
-            </div>
-        </section>
-        <meta content="google-site-verification" content="FY1wtPxWqws0BK2ttGoRTCQmOJMtdFjCuOlCKT3-vko"/>
-        <section class="py-32 grid md:grid-cols-3 gap-6">
-            <div class="reveal md:col-span-2 img-container h-[400px]">
-                <img src="https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&q=80&w=1500" 
-                     alt="Work Life" class="w-full h-full object-cover">
-                <div class="absolute inset-0 bg-black/40 p-10 flex flex-end items-end opacity-0 hover:opacity-100 transition-opacity">
-                    <p class="text-white italic">"Execution is everything."</p>
-                </div>
-            </div>
-            
-            <div class="reveal bg-zinc-100 dark:bg-cardBg p-10 rounded-[1.5rem] flex flex-col justify-between border border-zinc-200 dark:border-zinc-800">
-                <i data-lucide="quote" class="text-blue-500 w-10 h-10"></i>
-                <div>
-                    <h3 id="b-title" class="text-2xl font-bold mb-4">Vizyon</h3>
-                    <p id="b-desc" class="text-zinc-500 text-sm leading-relaxed italic">
-                        Geleceği tahmin etmiyorum, onu en modern teknoloji yığınlarıyla (stack) bizzat inşa ediyorum.
+        <section id="hero">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-6 w-full">
+                <div class="bento-card md:col-span-8 p-12 flex flex-col justify-end min-h-[500px] relative overflow-hidden group">
+                    <div class="absolute top-12 left-12 flex gap-2">
+                        <span class="px-3 py-1 bg-green-500/10 text-green-500 rounded-full text-[10px] font-bold border border-green-500/20 uppercase">Available for work</span>
+                    </div>
+                    <h1 class="text-7xl md:text-[8rem] font-extrabold tracking-tighter leading-[0.8] gradient-text">
+                        BORN TO <br> CREATE.
+                    </h1>
+                    <p class="mt-8 text-zinc-400 text-lg max-w-xl leading-relaxed">
+                        11. sınıf öğrencisi olarak dijital dünyayı kodluyorum. <span class="text-white font-semibold">Full-stack geliştirme</span>, finans ve psikoloji odaklı projeler.
                     </p>
                 </div>
+
+                <div class="bento-card md:col-span-4 p-4 flex items-center justify-center overflow-hidden relative">
+                    <img src="https://toprak.xyz/ben.jpg" class="w-full h-full object-cover rounded-[2rem] grayscale group-hover:grayscale-0 transition-all duration-1000">
+                    <div class="absolute bottom-10 bg-black/20 backdrop-blur-lg px-6 py-2 rounded-full border border-white/10">
+                        <div id="age-timer" class="text-3xl font-bold text-white tabular-nums">15</div>
+                    </div>
+                </div>
             </div>
         </section>
 
-        <section class="py-32 border-t border-zinc-200 dark:border-zinc-800">
-            <div class="flex flex-col md:flex-row gap-20">
-                <div class="reveal flex-1">
-                    <h2 id="t-career" class="text-[10px] font-bold tracking-[0.4em] uppercase text-zinc-400 mb-12">Kariyer Yolu</h2>
-                    <div class="space-y-12">
-                        <div class="group">
-                            <span class="text-blue-500 text-xs font-bold uppercase">2026 - Now</span>
-                            <h3 class="text-2xl font-bold group-hover:translate-x-2 transition">CEO @ STORDECO</h3>
-                            <p class="text-zinc-500 text-sm">Perde ticareti.</p>
+        <section id="stats">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 w-full">
+                <div class="bento-card p-10 flex flex-col justify-between h-64">
+                    <div class="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center text-2xl">🧩</div>
+                    <div>
+                        <h3 class="text-xl font-bold">Psychology</h3>
+                        <p class="text-zinc-500 text-sm mt-1 italic">Decoding behavior.</p>
+                    </div>
+                </div>
+                <div class="bento-card p-10 flex flex-col justify-between h-64">
+                    <div class="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center text-2xl">⚡</div>
+                    <div>
+                        <h3 class="text-xl font-bold">Dev Stack</h3>
+                        <p class="text-zinc-500 text-sm mt-1 italic">React, Node, TS/JS.</p>
+                    </div>
+                </div>
+                <div class="bento-card md:col-span-2 p-10 flex flex-col justify-center items-center text-center relative overflow-hidden">
+                    <div class="flex gap-6 mb-4 z-10">
+                        <div class="text-center">
+                            <span class="text-4xl font-extrabold block">1350</span>
+                            <span class="text-[8px] text-accent uppercase font-bold tracking-[0.3em]">SAT Score</span>
                         </div>
-                        <div class="group">
-                            <span class="text-zinc-500 text-xs font-bold uppercase">2024 - 2025</span>
-                            <h3 class="text-2xl font-bold group-hover:translate-x-2 transition">CEO @ RagberdGames.</h3>
-                            <p class="text-zinc-500 text-sm">Web development ve oyun level design rolü.</p>
+                        <div class="w-[1px] h-12 bg-white/10"></div>
+                        <div class="text-center">
+                            <span class="text-4xl font-extrabold block">71</span>
+                            <span class="text-[8px] text-accent uppercase font-bold tracking-[0.3em]">GPA</span>
+                        </div>
+                    </div>
+                    <p class="text-[10px] text-zinc-500 uppercase tracking-[0.2em] max-w-xs">Goal: University of Bologna, İtalya.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Experience Section -->
+        <section id="experience">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+                <div class="bento-card p-12">
+                    <h2 class="text-2xl font-bold mb-10 flex items-center gap-4 italic uppercase tracking-tighter">
+                        <span class="p-2 bg-accent/20 rounded-lg text-accent text-sm">💼</span> Career
+                    </h2>
+                    <div class="space-y-8">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h4 class="font-bold text-lg">CEO @ STORDECO</h4>
+                                <p class="text-sm text-zinc-500">E-commerce Management</p>
+                            </div>
+                            <span class="text-[9px] bg-white/5 px-3 py-1 rounded-full font-bold">2026</span>
+                        </div>
+                        <div class="flex justify-between items-start border-t border-white/5 pt-8">
+                            <div>
+                                <h4 class="font-bold text-lg">Lead Dev @ Bindly</h4>
+                                <p class="text-sm text-zinc-500">Social Desktop App</p>
+                            </div>
+                            <span class="text-[9px] bg-white/5 px-3 py-1 rounded-full font-bold">2025</span>
                         </div>
                     </div>
                 </div>
-                
-                <div class="reveal flex-1 bg-zinc-50 dark:bg-cardBg p-12 rounded-[2rem] border border-zinc-100 dark:border-zinc-800">
-                    <h2 id="t-skills" class="text-[10px] font-bold tracking-[0.4em] uppercase text-zinc-400 mb-8">Uzmanlık Alanları</h2>
-                    <ul class="space-y-6 text-lg font-semibold">
-                        <li class="flex justify-between border-b border-zinc-200 dark:border-zinc-800 pb-2"><span>Systems Architecture</span> <span class="text-blue-500">99%</span></li>
-                        <li class="flex justify-between border-b border-zinc-200 dark:border-zinc-800 pb-2"><span>Venture Capital</span> <span class="text-blue-500">85%</span></li>
-                        <li class="flex justify-between border-b border-zinc-200 dark:border-zinc-800 pb-2"><span>Full-Stack Web</span> <span class="text-blue-500">95%</span></li>
-                    </ul>
+
+                <div class="bento-card p-12">
+                    <h2 class="text-2xl font-bold mb-10 flex items-center gap-4 italic uppercase tracking-tighter">
+                        <span class="p-2 bg-accent/20 rounded-lg text-accent text-sm">🎓</span> Learning
+                    </h2>
+                    <div class="space-y-8">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h4 class="font-bold text-lg">Şişli MTAL</h4>
+                                <p class="text-sm text-zinc-500">10th Grade</p>
+                            </div>
+                            <span class="text-[9px] bg-accent/20 text-accent px-3 py-1 rounded-full font-bold">IST</span>
+                        </div>
+                        <div class="flex justify-between items-start border-t border-white/5 pt-8">
+                            <div>
+                                <h4 class="font-bold text-lg">Self-Education</h4>
+                                <p class="text-sm text-zinc-500">CS & Advanced English</p>
+                            </div>
+                            <span class="text-[9px] bg-white/5 px-3 py-1 rounded-full font-bold">GLOBAL</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <section class="reveal py-40 text-center">
-            <p id="f-pre" class="text-zinc-400 text-xs font-bold tracking-[0.4em] uppercase mb-8">Yeni bir iş birliği için</p>
-            <a href="mailto:contact@toprak.xyz" class="text-4xl md:text-8xl font-extrabold tracking-tighter hover:text-blue-500 transition-all duration-500">
-                LET'S CONNECT.
-            </a>
-            <div class="mt-32 flex justify-between text-[10px] font-bold tracking-widest text-zinc-500 uppercase">
-                <span>© 2025 PRVT RIGHTS</span>
-                <span>LIVING IN ISTANBUL</span>
+        <section id="projects">
+            <div class="w-full">
+                <div class="flex justify-between items-end mb-12">
+                    <h2 class="text-6xl font-extrabold tracking-tighter italic">GALLERY<span class="text-accent">.</span></h2>
+                    <p class="text-[10px] text-zinc-500 uppercase tracking-[0.4em] mb-2 font-bold">Visual Archive</p>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                    <div class="bento-card gallery-item"><img src="https://toprak.xyz/ben.jpg" class="w-full h-full object-cover"></div>
+                    <div class="bento-card gallery-item"><img src="https://toprak.xyz/ben2.jpg" class="w-full h-full object-cover"></div>
+                    <div class="bento-card gallery-item"><img src="https://toprak.xyz/cover.jpeg" class="w-full h-full object-cover"></div>
+                    <div class="bento-card gallery-item"><img src="https://toprak.xyz/maybecover2.jpeg" class="w-full h-full object-cover"></div>
+                    <div class="bento-card gallery-item"><img src="https://media.discordapp.net/attachments/1291062503417053185/1453860383134580828/content.png?ex=69f66afe&is=69f5197e&hm=acf601f93852a79efd4280131c8806b426f9ef0f5cb9a126cd872fa3904e2cee&=&format=webp&quality=lossless&width=1376&height=917" class="w-full h-full object-cover"></div>
+                    <div class="bento-card gallery-item"><img src="https://toprak.xyz/firstsetup.jpeg" class="w-full h-full object-cover"></div>
+                </div>
             </div>
         </section>
 
+        <section id="contact">
+            <div class="bento-card w-full p-20 text-center relative overflow-hidden group">
+                <div class="absolute inset-0 bg-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                <p class="text-accent font-bold tracking-[0.5em] uppercase text-[10px] mb-8">Ready to architect?</p>
+                <a href="mailto:contact@toprak.xyz" class="text-5xl md:text-8xl font-extrabold tracking-tighter hover:text-accent transition duration-500 block">
+                    LET'S TALK.
+                </a>
+                <div class="mt-16 flex justify-center gap-12 text-[10px] font-bold tracking-widest uppercase">
+                    <a href="https://instagram.com/toprakdoganims" class="text-zinc-500 hover:text-white transition">Instagram</a>
+                    <a href="https://github.com/TPashaxrd" class="text-zinc-500 hover:text-white transition">GitHub</a>
+                    <a href="https://www.youtube.com/@toprakdoganim" class="text-zinc-500 hover:text-white transition">YouTube</a>
+                </div>
+            </div>
+        </section>
     </main>
 
-    <script>
-        lucide.createIcons();
-        gsap.registerPlugin(ScrollTrigger);
+    <footer class="py-10 text-center">
+        <p class="text-[9px] text-zinc-700 tracking-[0.8em] uppercase font-bold">JUST CONTACT WITH ME</p>
+    </footer>
 
-        document.querySelectorAll('.reveal').forEach(el => {
-            gsap.to(el, {
-                scrollTrigger: { trigger: el, start: "top 90%" },
-                opacity: 1, y: 0, duration: 1.5, ease: "power4.out"
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+        const lenis = new Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
+        });
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+
+        window.addEventListener('load', () => {
+            const tl = gsap.timeline();
+            
+            tl.to("#loader-bar", { width: "100%", duration: 1.5, ease: "power4.inOut" })
+              .to("#preloader", { yPercent: -100, duration: 1, ease: "expo.inOut" })
+              .call(() => {
+                  document.getElementById('preloader').remove();
+                  initScrollAnims();
+              });
+        });
+
+        function initScrollAnims() {
+            const sections = document.querySelectorAll('section');
+            
+            sections.forEach(section => {
+                const cards = section.querySelectorAll('.bento-card');
+                
+                gsap.fromTo(cards, 
+                    { 
+                        y: 100, 
+                        opacity: 0, 
+                        rotationX: -15,
+                        scale: 0.9 
+                    }, 
+                    {
+                        y: 0,
+                        opacity: 1,
+                        rotationX: 0,
+                        scale: 1,
+                        duration: 1.2,
+                        stagger: 0.1,
+                        ease: "expo.out",
+                        scrollTrigger: {
+                            trigger: section,
+                            start: "top 80%", // Sayfa her "snap" olduğunda tetiklenir
+                            toggleActions: "play none none reverse"
+                        }
+                    }
+                );
+            });
+        }
+
+        function updateAge() {
+            const birth = new Date('2010-04-30T00:00:00');
+            const age = (new Date() - birth) / (1000 * 60 * 60 * 24 * 365.25);
+            document.getElementById('age-timer').innerText = age.toFixed(9);
+        }
+        setInterval(updateAge, 50);
+
+        document.querySelectorAll('.bento-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = (e.clientX - rect.left) / rect.width - 0.5;
+                const y = (e.clientY - rect.top) / rect.height - 0.5;
+                gsap.to(card, { 
+                    rotateY: x * 10, 
+                    rotateX: -y * 10, 
+                    duration: 0.5,
+                    ease: "power2.out"
+                });
+            });
+            card.addEventListener('mouseleave', () => {
+                gsap.to(card, { rotateY: 0, rotateX: 0, duration: 0.8, ease: "elastic.out(1, 0.3)" });
             });
         });
 
-        function toggleTheme() {
-            const html = document.documentElement;
-            html.classList.toggle('dark');
-            const icon = document.getElementById('theme-icon');
-            icon.setAttribute('data-lucide', html.classList.contains('dark') ? 'sun' : 'moon');
-            lucide.createIcons();
-        }
-
-        const data = {
-            tr: {
-                loc: "İSTANBUL / GLOBAL",
-                desc: "Yazılım ve girişimcilik tarafına ilgi duyan, fikir üretip küçük projelerle test eden bir öğrenci.",
-                vision: "Vizyon",
-                v_desc: "Küçük başlayıp gerçekten işe yarayan şeyler üretmek.",
-                career: "Kariyer Yolu",
-                skills: "Odak Alanları",
-                pre: "Yeni bir iş birliği için"
-            },
-            en: {
-                loc: "ISTANBUL / GLOBAL",
-                desc: "Building small things until something big works.",
-                vision: "Vision",
-                v_desc: "Start small, build things that actually work.",
-                career: "Career Path",
-                skills: "Focus Areas",
-                pre: "Open to collaborations"
-            }
-        };
-
-        let lang = 'tr';
-        function toggleLang() {
-            lang = lang === 'tr' ? 'en' : 'tr';
-            const d = data[lang];
-            document.getElementById('lang-btn').innerText = lang === 'tr' ? 'EN' : 'TR';
-            document.getElementById('h-loc').innerText = d.loc;
-            document.getElementById('h-desc').innerText = d.desc;
-            document.getElementById('b-title').innerText = d.vision;
-            document.getElementById('b-desc').innerText = d.v_desc;
-            document.getElementById('t-career').innerText = d.career;
-            document.getElementById('t-skills').innerText = d.skills;
-            document.getElementById('f-pre').innerText = d.pre;
-        }
+        lucide.createIcons();
     </script>
 </body>
 </html>
